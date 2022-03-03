@@ -1,0 +1,157 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>New World Order</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <!-- <link rel="preload" href="https://tomocode.github.io/islaOnline-1/assets/defaultrsfont.woff2" as="font"
+        type="font/woff2" crossorigin> -->
+    <style>
+        html {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        @font-face {
+            font-family: 'defaultrs';
+            src: URL('https://tomocode.github.io/islaOnline-1/assets/defaultrsfont.woff2');
+        }
+
+        body {
+            background: #000;
+            image-rendering: pixelated;
+            font-family: 'defaultrs';
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        #gamewindow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 640px;
+            height: 480px;
+            background: #000000;
+            border: 1px solid #fff;
+
+            /* border: 1px solid #fff; */
+        }
+
+        .uiscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            background: #3d3429;
+            width: 640px;
+            height: 480px;
+            border: 1px solid #fff;
+            color: #fff;
+
+
+            /* display: none; */
+        }
+
+        .eightytwo {
+            width: 90%;
+            margin-right: auto;
+            margin-left: auto;
+        }
+
+        select,
+        input,
+        button {
+            font-family: 'defaultrs';
+            font-weight: normal;
+            font-style: normal;
+            outline: none;
+        }
+    </style>
+    <script src='https://cdn.firebase.com/js/client/2.4.0/firebase.js'></script>
+</head>
+
+<body>
+    <canvas id="gamewindow"></canvas>
+    <div id="enterscreen" class="uiscreen">
+        <div class="eightytwo">
+            <h2>New World Order <span style="color:yellow">beta</span></h2>
+            <span style="color: yellow">PvP Hour (Farm Hour starts in 99:99:99)</span>
+            <hr>
+            <h3>Choose powers to use</h3>
+            <span>You start off with 3 powers of your choice. Kill other players to earn up to 6 in your
+                slot.<br>Currently <b>70%</b> to keep an item when used.</span><br>
+            <select id="firstslotselect">
+                <option value="speed">
+                    Potion of Speed
+                </option>
+                <option value="wind">
+                    Healing Wind
+                </option>
+                <option value="drain" disabled>
+                    Drain Life
+                </option>
+                <option value="fatigue" disabled>
+                    Fatigue
+                </option>
+                <option value="conf" disabled>
+                    Confusion
+                </option>
+                <option value="aware" disabled>
+                    Awareness
+                </option>
+            </select>
+            <select id="secondslotselect">
+                <option value="speed">
+                    Potion of Speed
+                </option>
+                <option value="wind">
+                    Healing Wind
+                </option>
+                <option value="drain" disabled>
+                    Drain Life
+                </option>
+                <option value="fatigue" disabled>
+                    Fatigue
+                </option>
+                <option value="conf" disabled>
+                    Confusion
+                </option>
+                <option value="aware" disabled>
+                    Awareness
+                </option>
+            </select>
+            <select id="thirdslotselect">
+                <option value="speed">
+                    Potion of Speed
+                </option>
+                <option value="wind">
+                    Healing Wind
+                </option>
+                <option value="drain" disabled>
+                    Drain Life
+                </option>
+                <option value="fatigue" disabled>
+                    Fatigue
+                </option>
+                <option value="conf" disabled>
+                    Confusion
+                </option>
+                <option value="aware" disabled>
+                    Awareness
+                </option>
+            </select>
+            <hr>
+            <input placeholder="Enter Player Name" id="playernameinput">
+            <br><br>
+            <button id="fightbtn" disabled>FIGHT</button>
+        </div>
+
+        <script src="./asset/scripts/server.js"></script>
+        <script src="./asset/scripts/map.js"></script>
+        <script src="./asset/scripts/client.js"></script>
+</body>
+
+</html>

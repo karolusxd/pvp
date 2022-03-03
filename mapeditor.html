@@ -1,0 +1,269 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Krajina</title>
+    <meta name="viewport" content="width=device-width, user-scalable=no">
+    <style>
+        #editorwindow {
+            height: 500px;
+            width: 500px;
+            background: #000000;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="editorwindow"></canvas><br>
+    <button id="fillfloor">fill floor</button>
+    <button id="exportbtn">export</button>
+    <script>
+        var editorwindow = document.getElementById("editorwindow");
+        var fillfloorbtn = document.getElementById("fillfloor");
+        var mapmasterdatachunk = [];
+        var mapmasterdata = [];
+        editorwindow.width = 500;
+        editorwindow.height = 500;
+        window.onload = function () {
+            newmapdata();
+        }
+
+        function newmapdata() {
+            mapmasterdata = new Array(1000);
+            for (i = 0; i < 1000; i++) {
+                for (p = 0; p < 1000; p++) {
+                    mapmasterdata[i] = new Array();
+                }
+                for (p = 0; p < 1000; p++) {
+                    mapmasterdata[i].push(0);
+                }
+            }
+            rendereditor();
+        }
+
+        var camerax = 0;
+        var cameray = 0;
+        var ctx = editorwindow.getContext("2d");
+        function rendereditor() {
+            ctx.clearRect(0, 0, 500, 500)
+
+            //render mesh visuals
+            for (i = 0; i < 50; i++) {
+                //y
+                ctx.fillStyle = "#444";
+                ctx.fillRect(0, i * 10, 500, 1);
+            }
+            for (i = 0; i < 50; i++) {
+                //x
+                ctx.fillStyle = "#444";
+                ctx.fillRect(i * 10, 0, 1, 500);
+            }
+
+            //render pointer position
+            ctx.fillStyle = "#444";
+            ctx.fillRect(Math.floor(mousecord[0] / 10) * 10, Math.floor(mousecord[1] / 10) * 10, 10, 10);
+
+            //render any data
+            for (i = 0; i < 50; i++) {
+                //y data
+                for (p = 0; p < 50; p++) {
+                    //x data
+                    if (mapmasterdata[cameray + i][camerax + p] != 0) {
+                        if (mapmasterdata[cameray + i][camerax + p] == 1) {
+                            ctx.fillStyle = "#584536";
+                            ctx.fillRect(p * 10, i * 10, 10, 10);
+                        } else if (mapmasterdata[cameray + i][camerax + p] == 2) {
+                            ctx.fillStyle = "#392a1c";
+                            ctx.fillRect(p * 10, i * 10, 10, 10);
+                        } else if (mapmasterdata[cameray + i][camerax + p] == 3) {
+                            ctx.fillStyle = "#ff5555";
+                            ctx.fillRect(p * 10, i * 10, 10, 10);
+                        } else if (mapmasterdata[cameray + i][camerax + p] == 4) {
+                            ctx.fillStyle = "#834622";
+                            ctx.fillRect(p * 10, i * 10, 10, 10);
+                        } else if (mapmasterdata[cameray + i][camerax + p] == 5) {
+                            ctx.fillStyle = "#837e22";
+                            ctx.fillRect(p * 10, i * 10, 10, 10);
+                        }
+                    }
+                }
+            }
+
+            //set blocks through brush tool
+            if (mousedowned == true) {
+                var mousepixx = Math.floor(mousecord[0] / 10);
+                var mousepixy = Math.floor(mousecord[1] / 10);
+                if (brushmode == 1) {
+                    mapmasterdata[cameray + mousepixy][camerax + mousepixx] = 0;
+                } else if (brushmode == 2) {
+                    mapmasterdata[cameray + mousepixy][camerax + mousepixx] = 1;
+                } else if (brushmode == 3) {
+                    mapmasterdata[cameray + mousepixy][camerax + mousepixx] = 2;
+                } else if (brushmode == 4) {
+                    mapmasterdata[cameray + mousepixy][camerax + mousepixx] = 3;
+                } else if (brushmode == 5) {
+                    mapmasterdata[cameray + mousepixy][camerax + mousepixx] = 4;
+                } else if (brushmode == 6) {
+                    mapmasterdata[cameray + mousepixy][camerax + mousepixx] = 5;
+                }
+            }
+
+            //move camera
+            if (moveup) {
+                if (cameray > 0) {
+                    cameray -= 1;
+                }
+            } else if (movedown) {
+                if (cameray < 949) {
+                    cameray += 1;
+                }
+            }
+
+            if (moveleft) {
+                if (camerax > 0) {
+                    camerax -= 1;
+                }
+            } else if (moveright) {
+                if (camerax < 949) {
+                    camerax += 1;
+                }
+            }
+
+            setTimeout(function () {
+                rendereditor();
+            }, 10)
+        }
+
+        var mousecord = [0, 0]
+        editorwindow.onmousemove = function (e) {
+            mousecord[0] = e.offsetX;
+            mousecord[1] = e.offsetY;
+        }
+        var mousedowned = false;
+        editorwindow.onmousedown = function () {
+            mousedowned = true;
+        }
+
+        editorwindow.onmouseup = function () {
+            mousedowned = false;
+        }
+
+        var brushmode = 1;
+        var onKeyUp = function (event) {
+            switch (event.keyCode) {
+                case 49: // 1 is erase
+                    brushmode = 1;
+                    break;
+                case 50: // 2 is floor
+                    brushmode = 2;
+                    break;
+                case 51: // 3 is wall
+                    brushmode = 3;
+                    break;
+                case 52: // 4 is pillar
+                    brushmode = 4;
+                    break;
+                case 53: // 5 is barrel
+                    brushmode = 5;
+                    break;
+                case 54: // 6 is hit area
+                    brushmode = 6;
+                    break;
+                case 87: // w
+                    moveup = false;
+                    break;
+                case 83: //s
+                    movedown = false;
+                    break;
+                case 65: //a
+                    moveleft = false;
+                    break;
+                case 68: //d
+                    moveright = false;
+                    break;
+            }
+        };
+
+        var moveup = false;
+        var movedown = false;
+        var moveright = false;
+        var moveleft = false;
+        var onKeyDown = function (event) {
+            switch (event.keyCode) {
+                case 87: // w
+                    moveup = true;
+                    break;
+                case 83: //s
+                    movedown = true;
+                    break;
+                case 65: //a
+                    moveleft = true;
+                    break;
+                case 68: //d
+                    moveright = true;
+                    break;
+            }
+        };
+        document.addEventListener('keyup', onKeyUp, false);
+        document.addEventListener('keydown', onKeyDown, false);
+
+        fillfloorbtn.onclick = function () {
+            var floorfillmode = false;
+            for (i = 0; i < mapmasterdata.length; i++) {
+                for (p = 0; p < mapmasterdata[i].length; p++) {
+                    if (p == 499) {
+                        floorfillmode = false;
+                    }
+                    if (mapmasterdata[i][p] == 2) {
+                        //wall detected
+                        if (mapmasterdata[i][p + 1] != 2) {
+                            if (floorfillmode) {
+                                floorfillmode = false;
+                            } else {
+                                floorfillmode = true;
+                            }
+                        }
+                    } else if (mapmasterdata[i][p] == 0) {
+                        if (floorfillmode) {
+                            mapmasterdata[i][p] = 1;
+                        }
+                    } else if (mapmasterdata[i][p] == 1) {
+                        if (floorfillmode == false) {
+                            mapmasterdata[i][p] = 0;
+                        }
+                    }
+                }
+            }
+            floorfillmode = false;
+        }
+
+        var exportbtn = document.getElementById("exportbtn");
+
+        exportbtn.onclick = function () {
+            var exportstring = [];
+            for (i = 0; i < mapmasterdata.length; i++) {
+                for (p = 0; p < mapmasterdata[i].length; p++) {
+                    exportstring.push(mapmasterdata[i][p]);
+                }
+                exportstring.push("!");
+            }
+            download("mapdata.txt", exportstring.join(""));
+        }
+
+        function download(filename, text) {
+            var element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+            element.setAttribute('download', filename);
+
+            element.style.display = 'none';
+            document.body.appendChild(element);
+
+            element.click();
+
+            document.body.removeChild(element);
+        }
+
+    </script>
+</body>
+
+</html>
